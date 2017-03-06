@@ -14,11 +14,11 @@ def init_mongodb():
     coll = db.cases
     return db.cases
 
-def case_scrape(file):
+def case_scrape(cfile):
     '''
     need multiple queries, one for the actual text, one for cases ref(note: not all cases have the related case tag, might need to implement some RE to grap the rest), grab case title?
     '''
-    r = requests.get('file')
+    r = requests.get(cfile)
     web_data=r.text
     soup = BeautifulSoup(web_data,'html.parser')
     '''
@@ -28,7 +28,7 @@ def case_scrape(file):
     link_list=[]
     mylinks=soup.findAll('a',{'class':'case-name'})
     for l in mylinks:
-        link_list.append(mylink['href'])
+        link_list.append(l['href'])
     return link_list
 
 def link_scape(list_of_links, table):
@@ -37,7 +37,7 @@ def link_scape(list_of_links, table):
     '''
     base_link='http://law.justia.com/'
 
-    for i,v in list_of_links:
+    for i,v in enumerate(list_of_links):
         list_of_links[i]=base_link+v
 
     for lnk in list_of_links:
@@ -47,7 +47,7 @@ def link_scape(list_of_links, table):
         #grabs full case text
         link_text=''
         for page in link_soup.findAll('div',{'class':'page'}):
-            text+=page.get_text()
+            link_text+=page.get_text()
         title_text=''
         for x in link_soup.findAll('h1',{'class':'heading-1'}):
             title_text+=x.get_text()
@@ -55,7 +55,7 @@ def link_scape(list_of_links, table):
         #re expression to pull case refs
         re_list = re.findall('(\d+\s\D\.\D*\w+\s\d*)',link_text)
         add_new = [{'case_title':title_text,'case_text':link_text, 'case_ref':re_list}]
-        coll.insert(add_new)
+        table.insert(add_new)
         time.sleep(9)
 
         # outdated code, not all case refs had a class
