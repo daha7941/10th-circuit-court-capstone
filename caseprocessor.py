@@ -13,7 +13,16 @@ def init_mongodb():
     coll = db.cases
     return db.cases
 
-def nlp_case(file):
+def nlp_case(incase, intest):
+    '''
+    note: need to add specialized stop words still
+    '''
+    tfidf = TfidfVectorizer(stop_words='english', max_df=.8, min_df=.01)
+    vect= tfidf.fit_transform(incase)
+    vtest= tfidf.transform(intest)
+    clf = MultinomialNB(alpha=0.1)
+    clf.fit(vect,y)
+    df_pred=clf.predict(vtest)
     return None
 
 def clean_text(text):
@@ -23,28 +32,25 @@ def clean_text(text):
             clean += char.lower()
     return clean
 
-def text_processing(dlist):
-    #changes input from list of dictionaries to a string 
-    new_list = []
-    for i in dlist:
-        new_list.append(i.values()[0])
-    temp = map(unidecode, new_list)
-    tdf = map(clean_text,temp)
-    return " ".join(tdf)
+# def text_processing(case_text):
+#     #changes input from list of dictionaries to a string
+#     new_list = []
+#     for i in case_text:
+#         new_list.append(i)
+#     # temp = map(unidecode, new_list)
+#     tdf = map(clean_text,temp)
+#     return " ".join(tdf)
 
 if __name__ == '__main__':
     cases = init_mongodb()
-    curs = cases.find({},{'case_text':True, '_id':False}) #cursor object
+    #should this include case ref?
+    curs = cases.find() #cursor object
     dlist = list(curs)
-    #
-    df = text_processing(dlist)
-    # indf = df.index.values
-    '''
-    note: need to add specialized stop words still
-    '''
-    tfidf = TfidfVectorizer(stop_words='english', max_df=.8, min_df=.01)
-    # vect= tfidf.fit_transform(df['doc'])
-    # vtest= tfidf.transform(df['doc'])
-    # clf = MultinomialNB(alpha=0.1)
-    # clf.fit(vect,y)
-    # df['NB_pred']=clf.predict(vtest)
+    crefs = set()
+    for i in dlist:
+        for k,v in i.items():
+            for v in i['case_ref']:
+                if len(v)< 30:
+                    x = v.strip()
+                    crefs.add(x)
+            i['case_text']= clean_text(i['case_text'])

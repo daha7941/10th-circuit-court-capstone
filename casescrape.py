@@ -1,11 +1,8 @@
-import numpy as np
-import pandas as pd
-from bs4 import BeautifulSoup
-import requests
 import re
+import requests
 import time
 from pymongo import MongoClient
-
+from bs4 import BeautifulSoup
 
 def init_mongodb():
     #Mongo database and table
