@@ -1,0 +1,29 @@
+first run:
+    top 20 by average tf-idf
+    [u'alj', u'wald', u'3559c', u'refinery', u'cattle', u'deportation', u'hale', u'trooper', u'apprendi', u'2b31b', u'nielsen', u'2255', u'tribal', u'2244d', u'erisa', u'cba', u'trademark', u'oncall', u'flsa', u'60b']
+
+    top 20 by total tf-idf
+    [u'mr', u'evidence', u'state', u'ss', u'trial', u'jury', u'judgment', u'motion', u'federal', u'ms', u'sentencing', u'government', u'claim', u'offense', u'petition', u'claims', u'sentence', u'order', u'rule', u'agreement']
+
+    top 20 by tf across all corpus
+        index error thrown
+
+second run:
+    top 20 by average tf-idf
+    [u'amro', u'judd', u'plotner', u'kurzets', u'sigmon', u'zamora', u'sherlocks', u'bei', u'akers', u'nuckols', u'easterwood', u'mcclatchey', u'archuletta', u'bustillosmunoz', u'dorris', u'oas', u'keeling', u'hishaw', u'lcfa', u'siedlik']
+
+    top 20 by total tf-idf
+    [u'mr', u'district', u'cir', u'f3d', u'state', u'evidence', u'ss', u'states', u'united', u'trial', u'10th', u'jury', u'id', u'courts', u'case', u'judgment', u'federal', u'motion', u'did', u'sentencing']
+
+    top 20 by tf across all corpus
+    [u'threelevel', u'olean', u'translated', u'andiv', u'thorough', u'incorrectly', u'formality', u'attachedorderpetitioner', u'nwosun', u'ithas', u'courtois', u'whispered', u'optimum', u'asian', u'caitlyn', u'otc', u'analysis2', u'dj', u'tolled4', u'widmer']
+
+third run:
+    top 20 by average tf-idf
+    [u'amro', u'judd', u'plotner', u'kurzets', u'sigmon', u'zamora', u'sherlocks', u'bei', u'akers', u'nuckols', u'easterwood', u'mcclatchey', u'archuletta', u'bustillosmunoz', u'dorris', u'oas', u'keeling', u'hishaw', u'lcfa', u'siedlik']
+
+    top 20 by total tf-idf
+    [u'mr', u'district', u'cir', u'f3d', u'state', u'evidence', u'ss', u'states', u'united', u'trial', u'10th', u'jury', u'id', u'courts', u'case', u'judgment', u'federal', u'motion', u'did', u'sentencing']
+
+    top 20 by tf across all corpus
+    [u'district', u'mr', u'cir', u'f3d', u'evidence', u'states', u'state', u'10th', u'id', u'united', u'case', u'courts', u'trial', u'did', u'law', u'judgment', u'f2d', u'jury', u'federal', u'ss']
