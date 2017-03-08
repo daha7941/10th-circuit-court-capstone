@@ -1,14 +1,21 @@
 import os
+import re
+import math
 import pandas as pd
 import numpy as np
-
 import pyspark as ps
 from pyspark.mllib.recommendation import ALS
-import math
-
 from pyspark import SparkContext, SparkConf
+from pyspark.mllib.clustering import KMeans
+#extremely rough code, jumping off point
 
-#extremely rough code, jumping off point 
+
+
+def cluster_case(tfidf, n):
+    cluster_model = KMeans.train(tfidf, n)
+    centriods = cluster_model.centers
+    return centriods
+
 if __name__ == '__main__':
 
     training_RDD, validation_RDD, test_RDD = small_data.randomSplit([6, 2, 2], seed=0L)
