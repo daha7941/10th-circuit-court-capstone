@@ -13,18 +13,21 @@ def init_mongodb():
     coll = db.cases
     return db.cases
 
-def nlp_case(incase, urefs):
+def nlp_case(corpus, urefs):
     '''
     note: need to add specialized stop words still
     '''
-    more_words = set('court', 'defendants', 'defendant', 'plaintiffs', 'plaintiff')
-    my_stop_words = more_words.union(urefs)
+    more_words = ['court', 'defendants', 'defendant', 'plaintiffs', 'plaintiff']
+    more_sets = set(more_words)
+    my_stop_words = more_sets.union(urefs)
     stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
-    tfidf = TfidfVectorizer(stop_words=stop_words, max_df=.8, min_df=.01)
-    vect= tfidf.fit_transform(incase)
+    tfidf = TfidfVectorizer(stop_words=stop_words)
+    vectors = tfidf.fit_transform(corpus).toarray()
+
+
     # vtest= tfidf.transform(intest)
-    clf = MultinomialNB(alpha=0.1)
-    clf.fit(vect,y)
+    # clf = MultinomialNB(alpha=0.1)
+    # clf.fit(vect,y)
     # df_pred=clf.predict(vtest)
     return None
 
@@ -36,14 +39,6 @@ def clean_text(text):
             clean += char.lower()
     return clean
 
-# def text_processing(case_text):
-#     #changes input from list of dictionaries to a string
-#     new_list = []
-#     for i in case_text:
-#         new_list.append(i)
-#     # temp = map(unidecode, new_list)
-#     tdf = map(clean_text,temp)
-#     return " ".join(tdf)
 def run_processor():
     cases = init_mongodb()
     curs = cases.find() #cursor object
@@ -57,6 +52,11 @@ def run_processor():
                     crefs.add(x)
             i['case_text']= clean_text(i['case_text'])
     urefs = map(unidecode, crefs)
+    #generate corpus
+    # corpus = []
+    # for item in dlist:
+    #     n = item['case_text']
+    #     corpus.append(n)
     return dlist, urefs
 
 if __name__ == '__main__':

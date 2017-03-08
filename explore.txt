@@ -27,3 +27,24 @@ third run:
 
     top 20 by tf across all corpus
     [u'district', u'mr', u'cir', u'f3d', u'evidence', u'states', u'state', u'10th', u'id', u'united', u'case', u'courts', u'trial', u'did', u'law', u'judgment', u'f2d', u'jury', u'federal', u'ss']
+---------added more stop words----------
+4th run:
+    top 20 by average tf-idf
+    [u'indian', u'bankruptcy', u'dr', u'robbery', u'methamphetamine', u'immunity', u'tax', u'speech', u'withdrawn', u'punitive', u'habeas', u'ss', u'search', u'cocaine', u'plea', u'settlement', u'discrimination', u'fees', u'harassment', u'sentencing']
+
+    top 20 by total tf-idf
+    [u'ss', u'trial', u'united', u'jury', u'judgment', u'law', u'f2d', u'government', u'claim', u'sentencing', u'appeal', u'claims', u'order', u'petition', u'offense', u'rule', u'sentence', u'summary', u'testimony', u'action']
+    93 94 0.97597366339
+    94 93 0.97597366339
+    192 297 0.994667651176
+    193 246 0.998867007735
+    218 267 0.999990948261
+    243 268 0.99523842969
+    246 193 0.998867007735
+    252 312 0.908624603409
+    253 313 0.999892921145
+    267 218 0.999990948261
+    268 243 0.99523842969
+    297 192 0.994667651176
+    312 252 0.908624603409
+    313 253 0.999892921145
