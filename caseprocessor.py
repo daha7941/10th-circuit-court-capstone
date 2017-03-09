@@ -19,32 +19,6 @@ def init_mongodb():
     coll = db.cases
     return db.cases
 
-def nlp_case(corpus, urefs):
-    '''
-    note: need to add specialized stop words still
-    '''
-    more_words = ['court', 'defendants', 'defendant', 'plaintiffs', 'plaintiff', 'state', '10th', 'district', 'case', 'federal', 'mr', 'ms', 'dr', 'motion', 'evidence', 'jury', 'united', 'trial', 'ss', \
-        'law', 'rule', 'claim', 'appeal', 'government']
-    more_sets = set(more_words)
-    my_stop_words = more_sets.union(crefs)
-    new_stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
-
-
-
-    case_text = unicode(case_text.translate(None, punctuation))
-    new_text = nlp(case_text)
-    case_tokens = [token.lemma_.lower() for token in new_text]
-    return ' '.join(x for x in tokens if x not in new_stop_words)
-
-    tfidf = TfidfVectorizer(stop_words=stop_words)
-    vectors = tfidf.fit_transform(corpus).toarray()
-
-
-    # vtest= tfidf.transform(intest)
-    # clf = MultinomialNB(alpha=0.1)
-    # clf.fit(vect,y)
-    # df_pred=clf.predict(vtest)
-    return None
 
 def clean_text(case_text, crefs):
     more_words = ['court', 'defendants', 'defendant', 'plaintiffs', 'plaintiff', 'state', '10th', 'district', 'case', 'federal', 'mr', 'ms', 'dr', 'motion', 'evidence', 'jury', 'united', 'trial', 'ss', \
@@ -53,15 +27,15 @@ def clean_text(case_text, crefs):
     my_stop_words = more_sets.union(crefs)
     new_stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
 
-    clean_text = ''
+    clean = ''
     new_text = unidecode(case_text)
     # case_text = nlp(case_text)
     # case_tokens = [token.lemma_.lower() for token in case_text]
     # return ' '.join(x for x in tokens if x not in new_stop_words)
-    for char in new_text:
+    for char in case_text:
         if char in printable and char not in punctuation:
-            clean_text += char.lower()
-    token_text = nlp(clean_text)
+            clean += char.lower()
+    token_text = nlp(clean)
     case_tokens = [token.lemma_ for token in token_text]
     return ' '.join(x for x in case_tokens if x not in new_stop_words)
 
