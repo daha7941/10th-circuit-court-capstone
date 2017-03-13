@@ -1,15 +1,13 @@
-import sys
 import pandas as pd
 from pymongo import MongoClient
 from unidecode import unidecode
 from string import punctuation
 from string import printable
 from multiprocessing import Pool, cpu_count
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction import text
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 import spacy
+import cPickle as pickle
 
 if not 'nlp' in locals():
     nlp = spacy.load('en')
@@ -73,10 +71,17 @@ def run_processor():
 #     case_id = []
 #     for i in out_dict:
 #         new_key = i['_id']
-#         new_val = i['case_ref']
+#         new_val = map(unidecode,i['case_ref'])
 #         new_dict.update({new_key:new_val})
 #     df = pd.DataFrame.from_dict(new_dict, orient='index')
 #     return df
 if __name__ == '__main__':
     out_dict, out_set = run_processor()
+    
+    #don't try opening this, will freeze atom
+    with open('case_pickle.txt','wb') as f:
+        pickle.dump(out_dict,f)
+    with open('ref_pickle.txt','wb') as fp:
+        pickle.dump(out_set,fp)
     # case_df = make_df(out_dict, out_set)
+    # case_df.to_csv('case_csv.csv')
