@@ -8,19 +8,14 @@ def main_exp(corpus, urefs):
     '''
     note: need to add (more?) specialized stop words still
     '''
-    more_words = ['court', 'defendants', 'defendant', 'plaintiffs', 'plaintiff', 'state', '10th', 'district', 'case', 'federal', 'mr', 'ms', 'dr', 'motion', 'evidence', 'jury', 'united', 'trial', 'ss', \
-    'law', 'rule', 'claim', 'appeal', 'government']
-    more_sets = set(more_words)
-    my_stop_words = more_sets.union(urefs)
-    stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
-    tfidf = TfidfVectorizer(stop_words=stop_words, max_df=0.9, min_df=0.05)
+    # more_words = ['court', 'defendants', 'defendant', 'plaintiffs', 'plaintiff', 'state', '10th', 'district', 'case', 'federal', 'mr', 'ms', 'dr', 'motion', 'evidence', 'jury', 'united', 'trial', 'ss', \
+    # 'law', 'rule', 'claim', 'appeal', 'government']
+    # more_sets = set(more_words)
+    # my_stop_words = more_sets.union(urefs)
+    # stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
+    tfidf = TfidfVectorizer(stop_words=urefs, max_df=0.9, min_df=0.05)
     vectors = tfidf.fit_transform(corpus).toarray()
-
-    #top 20 words
-    top_words(tfidf, vectors, corpus, 20)
-
-    cos_corp(vectors, corpus)
-    # return vectors
+    return vectors
 def top_words(tfidf, vectors, data, n):
 
     words = tfidf.get_feature_names()
@@ -59,4 +54,9 @@ if __name__ == '__main__':
         n = item['case_text']
         corpus.append(n)
 
-    main_exp(corpus,out_set)
+    vect = main_exp(corpus,out_set)
+
+    #top 20 words
+    top_words(tfidf, vectors, corpus, 20)
+
+    cos_corp(vectors, corpus)
