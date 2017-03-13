@@ -54,10 +54,11 @@ def run_processor():
     curs = cases.find() #cursor object
     dlist = list(curs)
     pool = Pool(processes=cpu_count()-1)
+    new_pool = Pool(processes=cpu_count()-1)
     temp_res = pool.map(clean_refs, (i['case_ref'] for i in dlist))
     crefs = set.union(*temp_res)
     case_args = [(i['case_text'] for i in dlist), crefs]
-    new_dlist = pool.map(clean_text, (d for d in dlist))
+    new_dlist = new_pool.map(clean_text, (d for d in dlist))
     # for i in dlist:
         # for k,v in i.items():
         # for v in i['case_ref']:
