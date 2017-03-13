@@ -1,20 +1,20 @@
-from caseprocessor import run_processor
+from text_exp import main_exp
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 import numpy as np
 
-def main_extra(corpus, urefs):
+def main_extra(vectors, tfidf, corpus):
 
     n_features= 5000
     #tf-idf for NMF
-    tfidf = TfidfVectorizer(stop_words=urefs, max_df=0.9, min_df=0.05,max_features=n_features)
-    tfidf_vectors = tfidf.fit_transform(corpus)
+    # tfidf = TfidfVectorizer(stop_words=urefs, max_df=0.9, min_df=0.05,max_features=n_features)
+    # tfidf_vectors = tfidf.fit_transform(corpus)
 
     #tf for LDA
-    countvect = CountVectorizer(stop_words=urefs, max_df=0.95, min_df=2,max_features=n_features)
+    countvect = CountVectorizer(max_df=0.95, min_df=2,max_features=n_features)
     tf_vectors = countvect.fit_transform(corpus)
 
-    nmf = nmf_model(tfidf_vectors)
+    nmf = nmf_model(vectors)
     lda = lda_model(tf_vectors)
 
     tfidf_features = tfidf.get_feature_names()
@@ -39,11 +39,6 @@ def lda_model(tf_vectors):
     return lda.fit(tf_vectors)
 
 if __name__ == '__main__':
-    out_dict, out_set = run_processor()
+    tfidf, vectors, corpus = main_exp()
 
-    #generate corpus
-    corpus = []
-    for item in out_dict:
-        n = item['case_text']
-        corpus.append(n)
-    main_extra(corpus,out_set)
+    main_extra(vectors, tfidf, corpus)
