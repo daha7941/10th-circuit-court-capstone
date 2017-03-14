@@ -29,7 +29,7 @@ def top_words(tfidf, vectors, data, n):
 
     words = tfidf.get_feature_names()
     new_vect = vectors.toarray()
-    avg = np.sum(vectors, axis=0) / np.sum(new_vect > 0, axis=0)
+    avg = np.sum(new_vect, axis=0) / np.sum(new_vect > 0, axis=0)
     print "top %d by average tf-idf" % n
     print get_values(avg, n, words)
     print
@@ -45,20 +45,20 @@ def get_values(lst, n, labels):
 
 
 def cos_corp(vectors, corpus):
-    #find cosine similarity between all cases in the corpus
+    #find similarity between all cases in the corpus
     new_vect = vectors.toarray()
-    cosine_similarities = linear_kernel(new_vect, new_vect)
-    for i, case1 in enumerate(corpus):
-        for j, case2 in enumerate(corpus):
-            # limit prints to those above value and different cases
-            if i != j:
-                print i,j, cosine_similarities[i,j]
+    similarities = linear_kernel(new_vect, new_vect)
+    # for i, case1 in enumerate(corpus):
+    #     for j, case2 in enumerate(corpus):
 
+            # if i != j:
+            #     print i,j, similarities[i,j]
+    return similarities
 if __name__ == '__main__':
 
     tfidf, vectors, corpus = main_exp()
 
     #top 20 words
-    # top_words(tfidf, vectors, corpus, 20)
+    top_words(tfidf, vectors, corpus, 20)
 
-    cos_corp(vectors, corpus)
+    m = cos_corp(vectors, corpus)

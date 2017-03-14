@@ -7,9 +7,12 @@ from bs4 import BeautifulSoup
 def init_mongodb():
     #Mongo database and table
     db_client = MongoClient()
-    db = db_client['case_database']
-    coll = db.cases
-    return db.cases
+    db = db_client['case_test']
+    # db = db_client['case_databse']
+    coll = db.cases2001
+    return db.cases2001
+    # coll = db.cases
+    # return db.cases
 
 def case_scrape(cfile):
     '''
@@ -62,8 +65,11 @@ def link_scape(list_of_links, table):
         #     case_ref.append(a.text.strip())
 if __name__ == '__main__':
     #start db
-    cases = init_mongodb()
+    # cases = init_mongodb()
+    cases2001 = init_mongodb()
     #get links to scrape
-    linklist = case_scrape('http://law.justia.com/cases/federal/appellate-courts/ca10/2000/')
-    #scrape and add data
-    link_scape(linklist,cases)
+    linklist = case_scrape('http://law.justia.com/cases/federal/appellate-courts/ca10/2001/')
+    # case_scrape('http://law.justia.com/cases/federal/appellate-courts/ca10/2000/')
+
+    #scrape and add data, just cases for train set
+    link_scape(linklist,cases2001)

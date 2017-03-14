@@ -16,6 +16,7 @@ def init_mongodb():
     #Mongo database and table
     db_client = MongoClient()
     db = db_client['case_database']
+    # db = db_client['case_test']
     coll = db.cases
     return db.cases
 
@@ -77,7 +78,7 @@ def run_processor():
 #     return df
 if __name__ == '__main__':
     out_dict, out_set = run_processor()
-    
+
     #don't try opening this, will freeze atom
     with open('case_pickle.txt','wb') as f:
         pickle.dump(out_dict,f)

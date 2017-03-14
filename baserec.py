@@ -1,49 +1,57 @@
-import os
-import re
-import math
-import pandas as pd
 import numpy as np
-import pyspark as ps
-from pyspark.mllib.recommendation import ALS
-from pyspark import SparkContext, SparkConf
-from pyspark.mllib.clustering import KMeans
-#extremely rough code, jumping off point
+import pandas as pd
+import cPickle as pickle
+from sklearn.metrics.pairwise import linear_kernel
+from text_exp import main_exp
+from take_sub import make_sub
+from nmf_matrix import nmf_topic_matrix
+'''need to loop through topic_corpus to find most similar topic then loop through docs within that topic'''
+def find_term_matrix(tfidf, corpus):
+    term_matrix = tfidf.transform(corpus)
+    return term_matrix
 
+def find_sim(tfidf, vectors, topic_corpus,test_corpus):
+    topic_term_matrix = find_term_matrix(tfidf, topic_corpus)
+    test_term_matrix = find_term_matrix(tfidf, test_corpus)
+    similarities = linear_kernel(test_term_matrix,topic_term_matrix)
+    return similarities
 
+def find_case(df,y):
+    some_num = int(y.values)
+    new_df = df[df['class']==some_num]
+    case_list = new_df['id'].tolist()
+    return case_list
+def find_similar_case(case_list_dict, case_list):
+    sub_topic_corpus=[]
+    for casedict in case_list_dict:
+        for i in casedict.items():
+            if i['_id'] in case_list:
+                sub_topic_corpus.append(i['case_text'])
+    return sub_topic_corpus
 
-def cluster_case(tfidf, n):
-    cluster_model = KMeans.train(tfidf, n)
-    centriods = cluster_model.centers
-    return centriods
+def final_rec(tfidf, vectors, sub_topic_corpus,case_text):
+    sub_topic_term = find_term_matrix(tfidf, sub_topic_corpus)
+    case_term =find_term_matrix(tfidf, case_text)
+    sim = find_sim(tfidf, vectors, sub_topic_term,case_term)
+    case_idx = sim.argmax()
 
 if __name__ == '__main__':
+    df = pd.read_csv('nmf_df.csv')
 
-    training_RDD, validation_RDD, test_RDD = small_data.randomSplit([6, 2, 2], seed=0L)
-
-
-
-    # seed =
-    # iterations =
-    # regularization_parameter =
-    # ranks = []
-    # errors = []
-    # err =
-    # tolerance =
-
-    min_error = float('inf')
-    best_rank = -1
-    best_iteration = -1
-    for rank in ranks:
-        model = ALS.train(training_RDD, rank, seed=seed, iterations=iterations,
-                          lambda_=regularization_parameter)
-        predictions = model.predictAll(validation_for_predict_RDD).map(lambda r: ((r[0], r[1]), r[2]))
-        rates_and_preds = validation_RDD.map(lambda r: ((int(r[0]), int(r[1])), float(r[2]))).join(predictions)
-        error = math.sqrt(rates_and_preds.map(lambda r: (r[1][0] - r[1][1])**2).mean())
-        errors[err] = error
-        err += 1
-        print 'For rank %s the RMSE is %s' % (rank, error)
-        if error < min_error:
-            min_error = error
-            best_rank = rank
-
-    print 'The best model was trained with rank %s' % best_rank
+    with open('case_pickle.txt','rb') as f:
+        case_list_dict = pickle.load(f)
+    test_corpus=[]
+    test_case = make_sub('case_test_pickle.txt')
+    test_text= test_case['case_text']
+    test_corpus.append(test_text)
+    tfidf, vectors, corpus = main_exp()
+    case_topic, topic_corpus = nmf_topic_matrix(corpus, vectors, tfidf)
+    cosm = find_sim(tfidf, vectors, topic_corpus,test_corpus)
+    topic_df = pd.DataFrame(cosm)
+    topic_df['class']=topic_df.idxmax(axis=1)
+    y = topic_df.pop('class')
+    case_list = find_case(df,y)
+    sub_topic_corpus =find_similar_case(case_list_dict, case_list)
+    case_idx = final_rec(tfidf, vectors, sub_topic_corpus,test_corpus)
+    recc = case_list_dict[case_idx]
+    print recc['case_title']
