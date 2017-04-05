@@ -10,7 +10,7 @@ def find_term_matrix(tfidf, corpus):
     term_matrix = tfidf.transform(corpus)
     return term_matrix
 
-def find_sim(tfidf, vectors, topic_corpus,test_corpus):
+def find_sim(tfidf, topic_corpus,test_corpus):
     topic_term_matrix = find_term_matrix(tfidf, topic_corpus)
     test_term_matrix = find_term_matrix(tfidf, test_corpus)
     similarities = linear_kernel(test_term_matrix,topic_term_matrix)
@@ -22,18 +22,21 @@ def find_case(df,y):
     case_list = new_df['id'].tolist()
     return case_list
 def find_similar_case(case_list_dict, case_list):
-    sub_topic_corpus=[]
-    for casedict in case_list_dict:
-        for i in casedict.items():
-            if i['_id'] in case_list:
-                sub_topic_corpus.append(i['case_text'])
+    # sub_topic_corpus=[]
+    df = pd.DataFrame(case_list_dict)
+    sub_df = df[df['_id'].astype(str).isin(case_list)]
+    sub_topic_corpus = sub_df['case_text'].tolist()
+    # for row in case_list_dict:
+    #     for i in casedict.items():
+    #         if i['_id'] in case_list:
+    #             sub_topic_corpus.append(i['case_text'])
     return sub_topic_corpus
 
-def final_rec(tfidf, vectors, sub_topic_corpus,case_text):
-    sub_topic_term = find_term_matrix(tfidf, sub_topic_corpus)
-    case_term =find_term_matrix(tfidf, case_text)
-    sim = find_sim(tfidf, vectors, sub_topic_term,case_term)
-    case_idx = sim.argmax()
+def final_rec(tfidf, sub_topic_corpus,case_text):
+    # sub_topic_term = tfidf.transform(sub_topic_corpus)
+    # case_term =tfidf.transform(case_text)
+    sim = linear_kernel(sub_topic_corpus,case_text)
+    return sim.argmax()
 
 if __name__ == '__main__':
     df = pd.read_csv('nmf_df.csv')
@@ -46,12 +49,14 @@ if __name__ == '__main__':
     test_corpus.append(test_text)
     tfidf, vectors, corpus = main_exp()
     case_topic, topic_corpus = nmf_topic_matrix(corpus, vectors, tfidf)
-    cosm = find_sim(tfidf, vectors, topic_corpus,test_corpus)
+    cosm = find_sim(tfidf, topic_corpus,test_corpus)
     topic_df = pd.DataFrame(cosm)
     topic_df['class']=topic_df.idxmax(axis=1)
     y = topic_df.pop('class')
     case_list = find_case(df,y)
     sub_topic_corpus =find_similar_case(case_list_dict, case_list)
-    case_idx = final_rec(tfidf, vectors, sub_topic_corpus,test_corpus)
+    sub_topic_term = tfidf.transform(sub_topic_corpus)
+    case_term =tfidf.transform(test_corpus)
+    case_idx = final_rec(tfidf, sub_topic_term, case_term)
     recc = case_list_dict[case_idx]
-    print recc['case_title']
+    print recc['case_title'], recc['case_ref']

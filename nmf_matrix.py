@@ -21,7 +21,7 @@ def case_rec(case_topic, id_list):
     id_list = np.asarray(id_list)
     case_topic_ori = case_topic.copy()
     num_groups = len(id_list)
-    case_topic_grouped = np.zeros((num_groups, 10))
+    case_topic_grouped = np.zeros((num_groups, 15))
     for i, case in enumerate(id_list):
         case_topic_grouped[i,:]=np.mean(case_topic[id_list==case,:],axis=0)
     return case_topic_grouped
