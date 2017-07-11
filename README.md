@@ -32,5 +32,6 @@ This project focuses on developing a model that can quickly identify related cou
     * First it finds the cosine similarity between the test case and the set of top words for each topic
 ![Alt text](/images/casecorpus1.png)
     * Second it finds the cosine similarity between the test case and all cases within the topic it was most similar to
+    
 ![Alt text](/images/casetopic1.png)
     * This is to prevent the model from calculating a similarity between the test case and all cases in the corpus
