@@ -13,7 +13,7 @@ This project focuses on developing a model that can quickly identify related cou
     * spaCy was used to process the cleaned case text
     * Split the data using the cases from 2000 as the training set and reserving the cases from 2001 as the testing set
     * Cases were then saved in a pickle file to form the corpus
-    
+
 ![Alt text](/images/casedata1.png)
 
 * Cosine Similarities and tf-idf
@@ -25,7 +25,6 @@ This project focuses on developing a model that can quickly identify related cou
 
     * NMF allowed for the data to be clustered without explicitly labeling each case topic
     * A set of top words within each topic was generated to allow for a subset of the data to be searched
-
 ![Alt text](/images/casetopwords1.png)
 
     * With the size of the database too many topics resulted in only a handful of case per topic (Similarities between topics and test case were extremely small)
@@ -35,11 +34,9 @@ This project focuses on developing a model that can quickly identify related cou
     * The model randomly selects a case from 2001 to test
     * The model searches for similar cases in the corpus in two steps
     * First it finds the cosine similarity between the test case and the set of top words for each topic
-
 ![Alt text](/images/casecorpus1.png)
 
     * Second it finds the cosine similarity between the test case and all cases within the topic it was most similar to
-
 ![Alt text](/images/casetopic1.png)
 
     * This is to prevent the model from calculating a similarity between the test case and all cases in the corpus
