@@ -79,7 +79,7 @@ def run_processor():
 if __name__ == '__main__':
     out_dict, out_set = run_processor()
 
-    #don't try opening this, will freeze atom
+    #don't try opening the pickle files, will freeze atom
     with open('case_pickle.txt','wb') as f:
         pickle.dump(out_dict,f)
     with open('ref_pickle.txt','wb') as fp:
